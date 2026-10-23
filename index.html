@@ -137,12 +137,9 @@
 
   /* dock styles */
   .dock { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
-  .dock figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px 18px 20px; }
-  .screen { height: 130px; border-radius: 10px; background: linear-gradient(160deg, #1d1d3a, #0f1022); position: relative; overflow: hidden; margin-bottom: 14px; }
-  .screen i { position: absolute; background: #050508; box-shadow: 0 0 0 1px rgba(255, 255, 255, .12); }
-  .s-notch i { left: 50%; top: 0; width: 96px; height: 28px; margin-left: -48px; border-radius: 0 0 16px 16px; }
-  .s-pill i { left: 50%; top: 14px; width: 110px; height: 26px; margin-left: -55px; border-radius: 999px; }
-  .s-side i { right: 0; top: 50%; width: 30px; height: 84px; margin-top: -42px; border-radius: 16px 0 0 16px; }
+  .dock figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 12px 12px 18px; }
+  .dock img { display: block; width: 100%; height: auto; border-radius: 10px; margin-bottom: 14px; }
+  .dock figcaption { padding: 0 6px; }
   .dock figcaption b { display: block; }
   .dock figcaption span { color: var(--muted); font-size: .92rem; }
 
@@ -313,15 +310,15 @@
       </div>
       <div class="dock">
         <figure>
-          <div class="screen s-notch"><i></i></div>
+          <img src="shots/dock-notch.webp" width="900" height="405" alt="The notch docked to the top edge of a real desktop." loading="lazy">
           <figcaption><b>Notch</b><span>Attached to the top edge, like a phone.</span></figcaption>
         </figure>
         <figure>
-          <div class="screen s-pill"><i></i></div>
+          <img src="shots/dock-pill.webp" width="900" height="405" alt="The pill floating below the top edge of a real desktop." loading="lazy">
           <figcaption><b>Pill</b><span>A floating pill that sizes itself to its content.</span></figcaption>
         </figure>
         <figure>
-          <div class="screen s-side"><i></i></div>
+          <img src="shots/dock-side.webp" width="900" height="405" alt="The notch docked to the right edge of a real desktop." loading="lazy">
           <figcaption><b>Side dock</b><span>A slim vertical strip on the left or right.</span></figcaption>
         </figure>
       </div>
