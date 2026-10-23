@@ -4,41 +4,416 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Mochi Smart Notch</title>
-<meta name="description" content="A notch-style overlay for Windows: media, controls, calendar, focus timer and more.">
+<meta name="description" content="A notch-style overlay for Windows. Media, quick controls, Bluetooth, clipboard, focus timer, calendar and system stats, one hover away.">
+<meta name="theme-color" content="#0a0a12">
+<link rel="icon" href="icon.png">
+<meta property="og:title" content="Mochi Smart Notch">
+<meta property="og:description" content="A notch-style overlay for Windows. Everything you reach for, one hover away.">
+<meta property="og:image" content="icon.png">
 <style>
-  :root { --bg: #0b0b10; --fg: #f4f4f8; --muted: #9a9aa8; --card: #16161e; --accent: #8b7cff; }
-  @media (prefers-color-scheme: light) {
-    :root { --bg: #f6f6fa; --fg: #14141a; --muted: #62626f; --card: #ffffff; }
+  :root {
+    --bg: #fafafc;
+    --surface: #ffffff;
+    --surface-2: #f0f0f6;
+    --fg: #12121a;
+    --muted: #5f5f70;
+    --line: rgba(18, 18, 26, .1);
+    --accent: #6f5cf0;
+    --accent-2: #3d8bff;
+    --accent-fg: #ffffff;
+    --shadow: 0 1px 2px rgba(18, 18, 26, .06), 0 12px 32px rgba(18, 18, 26, .08);
+    --glow: rgba(111, 92, 240, .16);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0a0a12;
+      --surface: #14141f;
+      --surface-2: #1b1b29;
+      --fg: #f3f3f8;
+      --muted: #9b9bb0;
+      --line: rgba(255, 255, 255, .09);
+      --accent: #8f7fff;
+      --accent-2: #5aa2ff;
+      --accent-fg: #0a0a12;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 16px 40px rgba(0, 0, 0, .35);
+      --glow: rgba(143, 127, 255, .2);
+    }
   }
   * { box-sizing: border-box; }
-  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.6 system-ui, "Segoe UI", sans-serif; }
-  main { max-width: 760px; margin: 0 auto; padding: 72px 16px; text-align: center; }
-  img { width: 112px; height: 112px; border-radius: 28px; }
-  h1 { font-size: 2.4rem; margin: 20px 0 8px; }
-  p.lead { color: var(--muted); max-width: 520px; margin: 0 auto 28px; }
-  .btn { display: inline-block; background: var(--accent); color: #fff; padding: 12px 28px; border-radius: 999px; text-decoration: none; font-weight: 600; }
-  .note { color: var(--muted); font-size: .85rem; margin-top: 12px; }
-  ul { list-style: none; padding: 0; margin: 56px 0 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; text-align: left; }
-  li { background: var(--card); border-radius: 14px; padding: 16px; }
-  li b { display: block; margin-bottom: 2px; }
-  li span { color: var(--muted); font-size: .9rem; }
+  html { scroll-behavior: smooth; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 16px/1.6 "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+
+  /* nav */
+  .nav {
+    position: sticky; top: 0; z-index: 10;
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    backdrop-filter: saturate(1.4) blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; text-decoration: none; letter-spacing: -.01em; }
+  .brand img { width: 28px; height: 28px; border-radius: 8px; }
+  .nav-links { display: flex; align-items: center; gap: 22px; font-size: .92rem; color: var(--muted); }
+  .nav-links a { text-decoration: none; }
+  .nav-links a:hover { color: var(--fg); }
+
+  /* buttons */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 11px 22px; border-radius: 999px;
+    background: var(--accent); color: var(--accent-fg);
+    font-weight: 600; font-size: .95rem; text-decoration: none;
+    box-shadow: 0 6px 20px var(--glow);
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 28px var(--glow); }
+  .btn:focus-visible, .nav a:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
+  .btn.small { padding: 8px 16px; font-size: .88rem; box-shadow: none; }
+  .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); box-shadow: none; }
+  .btn svg { width: 18px; height: 18px; }
+
+  /* hero */
+  .hero { position: relative; overflow: hidden; text-align: center; padding: 84px 0 0; }
+  .hero::before {
+    content: ""; position: absolute; inset: -20% -10% auto; height: 520px; z-index: -1;
+    background:
+      radial-gradient(500px 260px at 30% 30%, var(--glow), transparent 70%),
+      radial-gradient(460px 240px at 72% 20%, rgba(61, 139, 255, .14), transparent 70%);
+  }
+  .eyebrow {
+    display: inline-block; padding: 5px 14px; border-radius: 999px;
+    border: 1px solid var(--line); background: var(--surface);
+    font-size: .8rem; color: var(--muted); margin-bottom: 22px;
+  }
+  h1 { font-size: clamp(2.4rem, 6vw, 4rem); line-height: 1.08; letter-spacing: -.035em; margin: 0 auto 18px; max-width: 760px; }
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(100deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .sub { color: var(--muted); font-size: 1.12rem; max-width: 560px; margin: 0 auto 30px; }
+  .cta { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+  .meta { color: var(--muted); font-size: .84rem; margin-top: 16px; }
+
+  /* notch mock, always dark like the real app */
+  .stage {
+    margin: 56px auto 0; max-width: 820px; position: relative;
+    border: 1px solid var(--line); border-bottom: 0; border-radius: 18px 18px 0 0;
+    background: linear-gradient(180deg, #1d1d3a 0%, #0f1022 100%);
+    padding: 0 28px 40px; min-height: 340px;
+    box-shadow: var(--shadow);
+  }
+  .stage::after {
+    content: ""; position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+    background: radial-gradient(420px 200px at 70% 100%, rgba(143, 127, 255, .22), transparent 70%);
+  }
+  .bar { display: flex; justify-content: space-between; padding: 10px 4px; font-size: .72rem; color: rgba(255, 255, 255, .45); }
+  .bar span:last-child { letter-spacing: .08em; }
+  .panel {
+    position: relative; z-index: 1;
+    margin: 0 auto; max-width: 700px;
+    background: #050508; color: #f3f3f8;
+    border-radius: 0 0 30px 30px;
+    padding: 18px; text-align: left;
+    box-shadow: 0 24px 60px rgba(0, 0, 0, .5);
+  }
+  .tabs { display: flex; gap: 6px; margin-bottom: 14px; }
+  .tabs i {
+    width: 38px; height: 30px; border-radius: 10px; background: rgba(255, 255, 255, .06);
+    display: grid; place-items: center;
+  }
+  .tabs i.on { background: rgba(255, 255, 255, .16); }
+  .tabs svg { width: 15px; height: 15px; stroke: #fff; opacity: .85; }
+  .grid { display: grid; grid-template-columns: 1.05fr 1fr; gap: 12px; }
+  .card { background: rgba(255, 255, 255, .06); border-radius: 18px; padding: 14px; }
+  .np { display: flex; gap: 12px; align-items: center; }
+  .art { width: 54px; height: 54px; border-radius: 12px; background: linear-gradient(135deg, #8f7fff, #3d8bff); flex: none; }
+  .np b { display: block; font-size: .92rem; line-height: 1.25; }
+  .np small, .muted { color: rgba(255, 255, 255, .5); font-size: .76rem; }
+  .seek { height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .16); margin: 14px 0 12px; overflow: hidden; }
+  .seek i { display: block; width: 38%; height: 100%; background: #fff; }
+  .ctl { display: flex; justify-content: center; gap: 22px; }
+  .ctl svg { width: 18px; height: 18px; fill: #fff; stroke: #fff; }
+  .tiles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .tile { background: rgba(255, 255, 255, .06); border-radius: 14px; padding: 10px 6px; text-align: center; font-size: .7rem; color: rgba(255, 255, 255, .7); }
+  .tile.on { background: #fff; color: #050508; }
+  .tile svg { width: 18px; height: 18px; display: block; margin: 0 auto 4px; }
+  .sl { margin-top: 10px; display: grid; gap: 10px; }
+  .sl div { height: 4px; border-radius: 4px; background: rgba(255, 255, 255, .16); position: relative; }
+  .sl div i { position: absolute; left: 0; top: 0; bottom: 0; background: #fff; border-radius: 4px; }
+  .sl div i::after { content: ""; position: absolute; right: -6px; top: -4px; width: 12px; height: 12px; border-radius: 50%; background: #fff; }
+
+  /* sections */
+  section { padding: 88px 0 0; }
+  .head { text-align: center; max-width: 620px; margin: 0 auto 44px; }
+  .head h2 { font-size: clamp(1.7rem, 3.5vw, 2.4rem); letter-spacing: -.03em; line-height: 1.15; margin: 0 0 12px; }
+  .head p { color: var(--muted); margin: 0; }
+  .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 16px; }
+  .feature {
+    background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 22px;
+    transition: transform .2s ease, box-shadow .2s ease;
+  }
+  .feature:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+  .ico {
+    width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 14px;
+    background: linear-gradient(135deg, var(--glow), rgba(61, 139, 255, .14)); color: var(--accent);
+  }
+  .ico svg { width: 20px; height: 20px; }
+  .feature h3 { font-size: 1.05rem; margin: 0 0 6px; letter-spacing: -.01em; }
+  .feature p { margin: 0; color: var(--muted); font-size: .94rem; }
+
+  /* dock styles */
+  .dock { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .dock figure { margin: 0; background: var(--surface); border: 1px solid var(--line); border-radius: 18px; padding: 18px 18px 20px; }
+  .screen { height: 130px; border-radius: 10px; background: linear-gradient(160deg, #1d1d3a, #0f1022); position: relative; overflow: hidden; margin-bottom: 14px; }
+  .screen i { position: absolute; background: #050508; box-shadow: 0 0 0 1px rgba(255, 255, 255, .12); }
+  .s-notch i { left: 50%; top: 0; width: 96px; height: 28px; margin-left: -48px; border-radius: 0 0 16px 16px; }
+  .s-pill i { left: 50%; top: 14px; width: 110px; height: 26px; margin-left: -55px; border-radius: 999px; }
+  .s-side i { right: 0; top: 50%; width: 30px; height: 84px; margin-top: -42px; border-radius: 16px 0 0 16px; }
+  .dock figcaption b { display: block; }
+  .dock figcaption span { color: var(--muted); font-size: .92rem; }
+
+  /* trust */
+  .trust { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+  .trust div { border-top: 1px solid var(--line); padding-top: 18px; }
+  .trust h3 { margin: 0 0 6px; font-size: 1rem; }
+  .trust p { margin: 0; color: var(--muted); font-size: .94rem; }
+  code { background: var(--surface-2); padding: 2px 6px; border-radius: 6px; font-size: .85em; }
+
+  /* final cta */
+  .final {
+    margin-top: 88px; text-align: center; padding: 56px 20px; border-radius: 26px;
+    background: linear-gradient(135deg, var(--glow), rgba(61, 139, 255, .12)), var(--surface);
+    border: 1px solid var(--line);
+  }
+  .final h2 { font-size: clamp(1.6rem, 3.2vw, 2.2rem); letter-spacing: -.03em; margin: 0 0 8px; }
+  .final p { color: var(--muted); margin: 0 0 24px; }
+
+  footer { margin-top: 72px; border-top: 1px solid var(--line); padding: 26px 0 40px; color: var(--muted); font-size: .86rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+  footer nav { display: flex; gap: 20px; }
+  footer a { text-decoration: none; }
+  footer a:hover { color: var(--fg); }
+
+  @media (max-width: 760px) {
+    .dock, .trust { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 640px) {
+    .nav-links a:not(.btn) { display: none; }
+    .hero { padding-top: 56px; }
+    .stage { padding: 0 12px 28px; }
+    .grid { grid-template-columns: 1fr; }
+    .tile:nth-child(n+4) { display: none; }
+    section { padding-top: 64px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .btn, .feature { transition: none; }
+  }
 </style>
 </head>
 <body>
-<main>
-  <img src="icon.png" alt="Mochi Smart Notch icon">
-  <h1>Mochi Smart Notch</h1>
-  <p class="lead">A notch-style overlay for Windows. Dock it to any edge and get media, controls, calendar and focus tools one hover away.</p>
-  <a class="btn" href="https://github.com/dariyanto/mochi-smart-notch-releases/releases/latest">Download for Windows</a>
-  <p class="note">Windows 10/11, 64-bit. The app updates itself.</p>
-  <ul>
-    <li><b>Now playing</b><span>Control any media player from the notch.</span></li>
-    <li><b>Quick controls</b><span>Volume, brightness and Bluetooth.</span></li>
-    <li><b>Calendar</b><span>Your appointments and local events.</span></li>
-    <li><b>Focus timer</b><span>Timer with a task list.</span></li>
-    <li><b>System stats</b><span>Network, CPU and memory charts.</span></li>
-    <li><b>Dock anywhere</b><span>Top, left or right, on any display.</span></li>
-  </ul>
+
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="#top"><img src="icon.png" alt="">Mochi Smart Notch</a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="#features">Features</a>
+      <a href="#dock">Dock styles</a>
+      <a href="#privacy">Privacy</a>
+      <a class="btn small" href="https://github.com/dariyanto/mochi-smart-notch-releases/releases/latest">Download</a>
+    </nav>
+  </div>
+</header>
+
+<main id="top">
+  <div class="hero">
+    <div class="wrap">
+      <span class="eyebrow">For Windows 10 and 11</span>
+      <h1>Everything you reach for, <em>one hover away</em></h1>
+      <p class="sub">Mochi Smart Notch is a notch-style overlay for Windows. Dock it to any edge and control media, devices, focus and more without leaving your work.</p>
+      <div class="cta">
+        <a class="btn" id="dl" href="https://github.com/dariyanto/mochi-smart-notch-releases/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
+          Download for Windows
+        </a>
+        <a class="btn ghost" href="#features">See what it does</a>
+      </div>
+      <p class="meta" id="meta">Windows 10/11, 64-bit.</p>
+
+      <div class="stage" aria-hidden="true">
+        <div class="bar"><span>Fri 9:41</span><span>MOCHI</span></div>
+        <div class="panel">
+          <div class="tabs">
+            <i class="on"><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg></i>
+            <i><svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></i>
+          </div>
+          <div class="grid">
+            <div class="card">
+              <div class="np"><div class="art"></div><div><b>Now playing</b><small>Any media player</small></div></div>
+              <div class="seek"><i></i></div>
+              <div class="ctl">
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round"><path d="M19 20 9 12l10-8zM5 19V5"/></svg>
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round"><path d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+                <svg viewBox="0 0 24 24" stroke-width="2" stroke-linejoin="round"><path d="m5 4 10 8-10 8zM19 5v14"/></svg>
+              </div>
+            </div>
+            <div class="card">
+              <div class="tiles">
+                <div class="tile on"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg>Bluetooth</div>
+                <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg>Clipboard</div>
+                <div class="tile"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>Lock</div>
+              </div>
+              <div class="sl"><div><i style="width:70%"></i></div><div><i style="width:45%"></i></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <section id="features">
+    <div class="wrap">
+      <div class="head">
+        <h2>One overlay, the tools you actually use</h2>
+        <p>Nine tabs that open on hover and get out of the way when you move on.</p>
+      </div>
+      <div class="features">
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg></div>
+          <h3>Now playing</h3>
+          <p>Cover art, seek bar and transport controls for whatever is playing in any Windows media app.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 21v-7M4 10V3M12 21v-9M12 8V3M20 21v-5M20 12V3M1 14h6M9 8h6M17 16h6"/></svg></div>
+          <h3>Quick controls</h3>
+          <p>Volume, brightness, mute and one-click shortcuts to the calculator, snipping tool and lock screen.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m7 7 10 10-5 5V2l5 5L7 17"/></svg></div>
+          <h3>Bluetooth</h3>
+          <p>Turn the radio on or off, connect paired devices, scan for nearby ones and pair them from the notch.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="2" width="6" height="4" rx="1"/><path d="M9 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-3"/></svg></div>
+          <h3>Clipboard history</h3>
+          <p>Everything you copied, one click to copy it again. History stays on your PC.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="13" r="8"/><path d="M12 9v4l2 2M9 2h6"/></svg></div>
+          <h3>Focus timer and tasks</h3>
+          <p>A timer in one-minute steps with a task list beside it. The running timer shows in the collapsed notch.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
+          <h3>Calendar</h3>
+          <p>Your Windows calendar appointments plus your own events, laid out by day.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg></div>
+          <h3>Network, CPU and memory</h3>
+          <p>Live line charts in Mbps and percent, so you can see what is using your machine right now.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9 7 7M17 17l2.1 2.1M19.1 4.9 17 7M7 17l-2.1 2.1"/></svg></div>
+          <h3>Themes and effects</h3>
+          <p>Pick a theme, add effects like aurora, and tune the look from the settings window.</p>
+        </article>
+        <article class="feature">
+          <div class="ico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg></div>
+          <h3>Starts with Windows</h3>
+          <p>Lives in the tray with Settings and Exit. Choose at install time whether it starts with Windows.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section id="dock">
+    <div class="wrap">
+      <div class="head">
+        <h2>Dock it where it suits you</h2>
+        <p>Drag the notch to any edge of any display. Snap points keep it tidy, and it expands into whatever space is available.</p>
+      </div>
+      <div class="dock">
+        <figure>
+          <div class="screen s-notch"><i></i></div>
+          <figcaption><b>Notch</b><span>Attached to the top edge, like a phone.</span></figcaption>
+        </figure>
+        <figure>
+          <div class="screen s-pill"><i></i></div>
+          <figcaption><b>Pill</b><span>A floating pill that sizes itself to its content.</span></figcaption>
+        </figure>
+        <figure>
+          <div class="screen s-side"><i></i></div>
+          <figcaption><b>Side dock</b><span>A slim vertical strip on the left or right.</span></figcaption>
+        </figure>
+      </div>
+    </div>
+  </section>
+
+  <section id="privacy">
+    <div class="wrap">
+      <div class="head">
+        <h2>Private by design</h2>
+        <p>The notch reads what it needs to show you, and nothing leaves your PC.</p>
+      </div>
+      <div class="trust">
+        <div>
+          <h3>Local data only</h3>
+          <p>Tasks, events, clipboard history and settings live in a local database on your machine. It is not encrypted, so treat the PC accordingly.</p>
+        </div>
+        <div>
+          <h3>No accounts, no analytics</h3>
+          <p>Nothing to sign in to and nothing that reports back. The app does not send your data anywhere.</p>
+        </div>
+        <div>
+          <h3>Verifiable downloads</h3>
+          <p>Every release lists the SHA-256 of the installer. Check it with <code>Get-FileHash</code> before you run it.</p>
+        </div>
+      </div>
+
+      <div class="final">
+        <h2>Get Mochi Smart Notch</h2>
+        <p>Installs in seconds and can start with Windows.</p>
+        <a class="btn" href="https://github.com/dariyanto/mochi-smart-notch-releases/releases/latest">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
+          Download for Windows
+        </a>
+      </div>
+    </div>
+  </section>
 </main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Mochi Smart Notch</span>
+    <nav aria-label="Footer">
+      <a href="https://github.com/dariyanto/mochi-smart-notch-releases/releases">All releases</a>
+      <a href="#privacy">Privacy</a>
+    </nav>
+  </div>
+</footer>
+
+<script>
+  // show the current version next to the download button; the page works without it
+  fetch("https://api.github.com/repos/dariyanto/mochi-smart-notch-releases/releases/latest")
+    .then((r) => (r.ok ? r.json() : null))
+    .then((rel) => {
+      if (!rel || !rel.tag_name) return;
+      document.getElementById("meta").textContent = "Version " + rel.tag_name.replace(/^v/, "") + " · Windows 10/11, 64-bit";
+    })
+    .catch(() => {});
+</script>
 </body>
 </html>
