@@ -18,11 +18,11 @@
     --fg: #12121a;
     --muted: #5f5f70;
     --line: rgba(18, 18, 26, .1);
-    --accent: #6f5cf0;
-    --accent-2: #3d8bff;
+    --accent: #3b82f6;
+    --accent-2: #38bdf8;
     --accent-fg: #ffffff;
     --shadow: 0 1px 2px rgba(18, 18, 26, .06), 0 12px 32px rgba(18, 18, 26, .08);
-    --glow: rgba(111, 92, 240, .16);
+    --glow: rgba(59, 130, 246, .18);
   }
   @media (prefers-color-scheme: dark) {
     :root {
@@ -32,11 +32,11 @@
       --fg: #f3f3f8;
       --muted: #9b9bb0;
       --line: rgba(255, 255, 255, .09);
-      --accent: #8f7fff;
-      --accent-2: #5aa2ff;
-      --accent-fg: #0a0a12;
+      --accent: #3b82f6;
+      --accent-2: #38bdf8;
+      --accent-fg: #ffffff;
       --shadow: 0 1px 2px rgba(0, 0, 0, .4), 0 16px 40px rgba(0, 0, 0, .35);
-      --glow: rgba(143, 127, 255, .2);
+      --glow: rgba(59, 130, 246, .22);
     }
   }
   * { box-sizing: border-box; }
@@ -86,7 +86,7 @@
     content: ""; position: absolute; inset: -20% -10% auto; height: 520px; z-index: -1;
     background:
       radial-gradient(500px 260px at 30% 30%, var(--glow), transparent 70%),
-      radial-gradient(460px 240px at 72% 20%, rgba(61, 139, 255, .14), transparent 70%);
+      radial-gradient(460px 240px at 72% 20%, rgba(56, 189, 248, .14), transparent 70%);
   }
   .eyebrow {
     display: inline-block; padding: 5px 14px; border-radius: 999px;
@@ -129,7 +129,7 @@
   .feature:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
   .ico {
     width: 40px; height: 40px; border-radius: 12px; display: grid; place-items: center; margin-bottom: 14px;
-    background: linear-gradient(135deg, var(--glow), rgba(61, 139, 255, .14)); color: var(--accent);
+    background: linear-gradient(135deg, var(--glow), rgba(56, 189, 248, .14)); color: var(--accent);
   }
   .ico svg { width: 20px; height: 20px; }
   .feature h3 { font-size: 1.05rem; margin: 0 0 6px; letter-spacing: -.01em; }
@@ -156,7 +156,7 @@
   /* final cta */
   .final {
     margin-top: 88px; text-align: center; padding: 56px 20px; border-radius: 26px;
-    background: linear-gradient(135deg, var(--glow), rgba(61, 139, 255, .12)), var(--surface);
+    background: linear-gradient(135deg, var(--glow), rgba(56, 189, 248, .12)), var(--surface);
     border: 1px solid var(--line);
   }
   .final h2 { font-size: clamp(1.6rem, 3.2vw, 2.2rem); letter-spacing: -.03em; margin: 0 0 8px; }
