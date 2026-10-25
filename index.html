@@ -112,6 +112,7 @@
   .hero-shot { margin: 56px auto 0; max-width: 860px; }
   .gallery { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
   .gallery figure { margin: 0; }
+  .gallery figure.wide { grid-column: 1 / -1; width: calc(50% - 10px); justify-self: center; }
   .gallery figcaption { padding: 12px 4px 0; }
   .gallery figcaption b { display: block; font-size: 1rem; letter-spacing: -.01em; }
   .gallery figcaption span { color: var(--muted); font-size: .92rem; }
@@ -167,6 +168,7 @@
 
   @media (max-width: 760px) {
     .dock, .trust, .gallery { grid-template-columns: 1fr; }
+    .gallery figure.wide { width: 100%; }
   }
   @media (max-width: 640px) {
     .nav-links a:not(.btn) { display: none; }
@@ -210,7 +212,7 @@
       <p class="meta" id="meta">Windows 10/11, 64-bit.</p>
 
       <figure class="shot hero-shot">
-        <img src="shots/overview.webp" width="1224" height="443" alt="The Mochi Smart Notch overview panel docked at the top of the screen, showing now playing, focus timer, CPU, memory and network." fetchpriority="high">
+        <img src="shots/overview.webp" width="1600" height="900" alt="The Mochi Smart Notch overview panel docked at the top of the screen, showing now playing, focus timer, CPU, memory and network." fetchpriority="high">
       </figure>
     </div>
   </div>
@@ -279,23 +281,23 @@
       </div>
       <div class="gallery">
         <figure>
-          <div class="shot"><img src="shots/controls.webp" width="1224" height="443" alt="The Controls tab with mute, lock and screenshot tiles, plus brightness and volume sliders." loading="lazy"></div>
+          <div class="shot"><img src="shots/controls.webp" width="1600" height="900" alt="The Controls tab with mute, lock and screenshot tiles, plus brightness and volume sliders." loading="lazy"></div>
           <figcaption><b>Quick controls</b><span>Mute, lock, screenshot, brightness and volume.</span></figcaption>
         </figure>
         <figure>
-          <div class="shot"><img src="shots/focus.webp" width="1224" height="443" alt="The Focus tab with a 25 minute timer, focus and break durations and a task list." loading="lazy"></div>
+          <div class="shot"><img src="shots/focus.webp" width="1600" height="900" alt="The Focus tab with a 25 minute timer, focus and break durations and a task list." loading="lazy"></div>
           <figcaption><b>Focus timer</b><span>A timer with a task list beside it.</span></figcaption>
         </figure>
         <figure>
-          <div class="shot"><img src="shots/calendar.webp" width="1224" height="443" alt="The Calendar tab with a month view and the selected day's events." loading="lazy"></div>
+          <div class="shot"><img src="shots/calendar.webp" width="1600" height="900" alt="The Calendar tab with a month view and the selected day's events." loading="lazy"></div>
           <figcaption><b>Calendar</b><span>Your Windows appointments and your own events.</span></figcaption>
         </figure>
         <figure>
-          <div class="shot"><img src="shots/network.webp" width="1224" height="443" alt="The Network tab with download and upload speeds and a line chart of the last minute." loading="lazy"></div>
+          <div class="shot"><img src="shots/network.webp" width="1600" height="900" alt="The Network tab with download and upload speeds and a line chart of the last minute." loading="lazy"></div>
           <figcaption><b>Network</b><span>Live download and upload in Mbps.</span></figcaption>
         </figure>
-        <figure style="grid-column: 1 / -1">
-          <div class="shot"><img src="shots/usage.webp" width="1224" height="443" alt="The Usage tab with processor and memory charts for the last minute." loading="lazy"></div>
+        <figure class="wide">
+          <div class="shot"><img src="shots/usage.webp" width="1600" height="900" alt="The Usage tab with processor and memory charts for the last minute." loading="lazy"></div>
           <figcaption><b>CPU and memory</b><span>See what is using your machine right now.</span></figcaption>
         </figure>
       </div>
