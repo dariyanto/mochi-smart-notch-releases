@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy Policy · Mochi Smart Notch</title>
+<meta name="description" content="What Mochi Smart Notch reads, where it stores it, and what it never does.">
+<meta name="theme-color" content="#0a0a12">
+<link rel="icon" href="icon.png">
+<style>
+  :root {
+    --bg: #fafafc; --surface: #ffffff; --fg: #12121a; --muted: #5f5f70;
+    --line: rgba(18, 18, 26, .1); --accent: #3b82f6; --surface-2: #f0f0f6;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #0a0a12; --surface: #14141f; --fg: #f3f3f8; --muted: #9b9bb0; --line: rgba(255, 255, 255, .09); --surface-2: #1b1b29; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.7 "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: var(--accent); }
+  .nav { border-bottom: 1px solid var(--line); }
+  .nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 60px; }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 650; text-decoration: none; color: var(--fg); }
+  .brand img { width: 28px; height: 28px; border-radius: 8px; }
+  .back { font-size: .92rem; color: var(--muted); text-decoration: none; }
+  .back:hover { color: var(--fg); }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 0 20px; }
+  main { padding: 56px 0 72px; }
+  h1 { font-size: clamp(2rem, 5vw, 2.8rem); letter-spacing: -.03em; line-height: 1.15; margin: 0 0 8px; }
+  .meta { color: var(--muted); margin: 0 0 40px; font-size: .92rem; }
+  h2 { font-size: 1.25rem; letter-spacing: -.01em; margin: 40px 0 8px; }
+  p, li { color: var(--muted); }
+  p { margin: 0 0 14px; }
+  ul { padding-left: 1.2rem; margin: 0 0 14px; }
+  li { margin-bottom: 6px; }
+  strong { color: var(--fg); font-weight: 600; }
+  code { background: var(--surface-2); padding: 2px 6px; border-radius: 6px; font-size: .88em; }
+  .summary { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 20px 22px; margin-bottom: 8px; }
+  .summary p { margin: 0; color: var(--fg); }
+  footer { border-top: 1px solid var(--line); padding: 24px 0 40px; color: var(--muted); font-size: .86rem; }
+  footer .wrap { display: flex; flex-wrap: wrap; gap: 12px 24px; justify-content: space-between; }
+  footer a { color: var(--muted); text-decoration: none; }
+  footer a:hover { color: var(--fg); }
+</style>
+</head>
+<body>
+<header class="nav">
+  <div class="wrap">
+    <a class="brand" href="./"><img src="icon.png" alt="">Mochi Smart Notch</a>
+    <a class="back" href="./">&larr; Back to home</a>
+  </div>
+</header>
+
+<main>
+  <div class="wrap">
+    <h1>Privacy Policy</h1>
+    <p class="meta">Last updated 25 October 2026</p>
+
+    <div class="summary">
+      <p><strong>In short:</strong> Mochi Smart Notch works on your PC and keeps its data there. It has no accounts, no analytics and no advertising, and it does not send what it reads to the developer or to anyone else.</p>
+    </div>
+
+    <h2>Who we are</h2>
+    <p>Mochi Smart Notch is published by Dariyanto Dev. This policy applies to the app distributed through the Microsoft Store and to the direct download from GitHub.</p>
+
+    <h2>What the app reads</h2>
+    <p>To show you its panels, the app reads the following on your computer. Each one is used only to display it or act on your request.</p>
+    <ul>
+      <li><strong>Media playback:</strong> the title, artist, artwork and position of what is playing in other Windows media apps, and the loudness of the audio output, so the bars can follow the sound.</li>
+      <li><strong>Calendar:</strong> appointments from the Windows calendar, so they can be shown by day.</li>
+      <li><strong>Bluetooth:</strong> the radio state and the names of paired and nearby devices, so you can connect and pair them.</li>
+      <li><strong>Clipboard:</strong> text you copy, so the clipboard history can show it and copy it again.</li>
+      <li><strong>System state:</strong> CPU, memory and network usage, battery level, volume, brightness and the default audio output device.</li>
+      <li><strong>Your Windows user name:</strong> only for the welcome greeting, unless you enter a different name in Settings.</li>
+    </ul>
+
+    <h2>What the app stores</h2>
+    <p>The app keeps your tasks, the events you add, your clipboard history and your settings in a local database on your PC, in the folder <code>%APPDATA%\com.redcircleapps.mochi</code>. This database is not encrypted, so anyone with access to your Windows account can read it. Calendar appointments from Windows, media information and Bluetooth devices are read when needed and are not copied into the database, apart from a short saved list of paired Bluetooth devices.</p>
+
+    <h2>What leaves your computer</h2>
+    <p>Nothing the app reads is transmitted to us or to third parties. The app makes network requests only in these cases:</p>
+    <ul>
+      <li>If you set a wallpaper link in Settings, the app loads that image from the address you entered.</li>
+      <li>The direct-download version from GitHub may contact <code>github.com</code> to look for a newer release. The Microsoft Store version does not; the Store delivers its updates.</li>
+    </ul>
+    <p>The app contains no analytics, advertising or tracking, and there is no account to create.</p>
+
+    <h2>Your choices and deleting your data</h2>
+    <ul>
+      <li>Clear the clipboard history from the Clipboard panel at any time, and delete tasks and events individually.</li>
+      <li>Turn off any panel you do not want in Settings.</li>
+      <li>Uninstalling the Microsoft Store version removes its data. For the direct-download version, delete the folder named above to remove everything the app stored.</li>
+    </ul>
+
+    <h2>Children</h2>
+    <p>The app is a general desktop utility and is not directed at children. It does not knowingly collect personal information from anyone.</p>
+
+    <h2>Changes to this policy</h2>
+    <p>If this policy changes, the new version will be posted on this page with an updated date.</p>
+
+    <h2>Contact</h2>
+    <p>Questions about privacy can be raised on the project's <a href="https://github.com/dariyanto/mochi-smart-notch-releases/issues">GitHub issues page</a>.</p>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>&copy; 2026 Mochi Smart Notch</span>
+    <a href="./">Home</a>
+  </div>
+</footer>
+</body>
+</html>
