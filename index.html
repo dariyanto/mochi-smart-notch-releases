@@ -98,6 +98,10 @@
   .btn:focus-visible, .nav a:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; }
   .btn.small { padding: 8px 16px; font-size: .88rem; box-shadow: none; }
   .btn.ghost { background: transparent; color: var(--fg); border: 1px solid var(--line); box-shadow: none; }
+  /* the official Microsoft Store badge, shown unmodified and at its native proportions */
+  .store-badge { display: inline-flex; align-items: center; }
+  .store-badge img { display: block; width: 161px; height: 44px; }
+  .store-badge:focus-visible { outline: 2px solid var(--accent-2); outline-offset: 3px; border-radius: 6px; }
   .btn svg { width: 18px; height: 18px; }
 
   /* hero */
@@ -226,6 +230,12 @@
         <a class="btn" id="dl" href="https://github.com/dariyanto/mochi-smart-notch-releases/releases/latest">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
           Download for Windows
+        </a>
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9N0XKDVVT9M0?hl=en-us&amp;gl=ID&amp;ocid=pdpshare" aria-label="Get Mochi Smart Notch from Microsoft Store">
+          <picture>
+            <source srcset="badges/ms-store-light.svg" media="(prefers-color-scheme: dark)">
+            <img src="badges/ms-store-dark.svg" width="161" height="44" alt="Get it from Microsoft Store">
+          </picture>
         </a>
         <a class="btn ghost" href="#features">See what it does</a>
       </div>
@@ -371,10 +381,18 @@
       <div class="final">
         <h2>Get Mochi Smart Notch</h2>
         <p>Installs in seconds and can start with Windows.</p>
+        <div class="cta">
         <a class="btn" href="https://github.com/dariyanto/mochi-smart-notch-releases/releases/latest">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v12m0 0-4-4m4 4 4-4M4 21h16"/></svg>
           Download for Windows
         </a>
+        <a class="store-badge" href="https://apps.microsoft.com/detail/9N0XKDVVT9M0?hl=en-us&amp;gl=ID&amp;ocid=pdpshare" aria-label="Get Mochi Smart Notch from Microsoft Store">
+          <picture>
+            <source srcset="badges/ms-store-light.svg" media="(prefers-color-scheme: dark)">
+            <img src="badges/ms-store-dark.svg" width="161" height="44" alt="Get it from Microsoft Store">
+          </picture>
+        </a>
+        </div>
       </div>
     </div>
   </section>
